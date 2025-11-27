@@ -1,6 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { NButton, NInput, NCard } from 'naive-ui'
+
+</script>
 
 <template>
+  <div class="login-parent">
   <n-card class="login-form" footer-class="footer-c" title="Administrator View">
     <h2>Username</h2>
     <n-input placeholder="Enter username here" round />
@@ -12,12 +16,12 @@
     <n-button secondary>Register</n-button>
     <template #footer> All passwords are hashed, not saved in plain text to database</template>
   </n-card>
+  </div>
 </template>
 
 <style scoped>
 .login-form {
-  align-self: center;
-  margin-top: 2.5rem;
+  margin: 2.5rem;
   width: 50%;
   min-height: 75%;
   border-radius: 5%;
@@ -31,6 +35,11 @@
     rgba(237, 221, 83, 1) 100%
   );
   border: 0;
+}
+.login-parent {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 .n-input {
   width: 48rem;

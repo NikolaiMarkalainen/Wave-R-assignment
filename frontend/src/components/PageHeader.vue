@@ -30,13 +30,18 @@ import { PeopleOutline } from '@vicons/ionicons5'
 .header-parent {
   padding-top: 1rem;
   padding-left: 2.5rem;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 10vh;
   background: linear-gradient(
     135deg,
     rgba(42, 123, 155, 1) 0%,
     rgba(87, 199, 133, 1) 50%,
     rgba(237, 221, 83, 1) 100%
   );
+}
+@media (max-width: 720px) {
+  .header-parent {
+    height: 15vh;
+  }
 }
 </style>
