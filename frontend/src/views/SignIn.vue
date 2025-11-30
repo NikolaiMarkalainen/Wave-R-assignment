@@ -4,7 +4,7 @@ import { NButton, NInput, NTabs, NTabPane, NForm, NFormItem, NFlex } from 'naive
 
 <template>
   <n-flex justify="center" size="small" class="flex-container">
-    <n-tabs class="login-parent" animated default-value="Sign in" size="large">
+    <n-tabs class="login-parent" animated size="large" default-value="signin">
       <n-tab-pane name="signin" tab="Sign in">
         <n-form ref="formRef" style="margin-top: 2rem">
           <n-form-item label="Username" path="user.name" show-require-mark>
