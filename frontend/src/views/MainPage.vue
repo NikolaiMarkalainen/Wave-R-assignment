@@ -3,11 +3,10 @@ import type { DataTableColumns, DataTableInst, DataTableRowKey } from 'naive-ui'
 import { NDataTable, NSpace, NButton, NIcon, NFlex, NModal } from 'naive-ui'
 import { AddCircle, TrashBin } from '@vicons/ionicons5'
 import { ref } from 'vue'
-import type { IUserInterface } from '@/types/IUserObject'
-import type { IOccupations } from '@/types/OccupationRecords'
 import UserAdd from '@/components/UserAdd.vue'
-import { Occupations } from '@/types/OccupationRecords'
-
+import { Occupations } from '@/types/types'
+import type { IUserInterface, IOccupations } from '@/types/types'
+import UserView from '@/components/UserView.vue'
 const columns: DataTableColumns<IUserInterface> = [
   { type: 'selection' },
   {
@@ -105,22 +104,38 @@ const data: IUserInterface[] = [
   },
 ]
 const pagination = ref({ pageSize: 5 })
+
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
+const checkedRows = ref<IUserInterface[]>([])
+
 const dataTableInst = ref<DataTableInst | null>(null)
 
 const showDetails = ref(false)
 const selectedRow = ref<IUserInterface | null>(null)
+
+const showAddModal = ref(false)
 
 const rowKey = (row: IUserInterface) => {
   return row.id
 }
 const handleCheck = (rowKeys: DataTableRowKey[]) => {
   checkedRowKeysRef.value = rowKeys
+  checkedRows.value = data.filter((row) => rowKeys.includes(rowKey(row)))
 }
 
 const handleRowClick = (row: IUserInterface) => {
   showDetails.value = true
   selectedRow.value = row
+}
+
+const handleDelete = () => {
+  //send request to delete by id
+  console.log(checkedRows.value)
+}
+
+const handleAdd = () => {
+  showAddModal.value = true
+  console.log('Add')
 }
 </script>
 
@@ -128,13 +143,13 @@ const handleRowClick = (row: IUserInterface) => {
   <n-flex justify="center" class="table" size="large">
     <n-space vertical :size="12">
       <n-space>
-        <n-button type="success">
+        <n-button type="success" v-on:click="handleAdd">
           <template #icon>
             <n-icon :component="AddCircle"> </n-icon>
           </template>
           Add
         </n-button>
-        <n-button type="error">
+        <n-button type="error" v-on:click="handleDelete">
           <template #icon>
             <n-icon :component="TrashBin"></n-icon>
           </template>
@@ -146,7 +161,15 @@ const handleRowClick = (row: IUserInterface) => {
         :columns="columns"
         :row-props="
           (row: IUserInterface) => ({
-            onClick: () => handleRowClick(row),
+            onClick: (e: MouseEvent) => {
+              const target = e.target as HTMLElement
+
+              if (target.closest('.n-checkbox-box')) {
+                return
+              }
+
+              handleRowClick(row)
+            },
           })
         "
         :data="data"
@@ -156,7 +179,10 @@ const handleRowClick = (row: IUserInterface) => {
       />
     </n-space>
     <n-modal v-model:show="showDetails">
-      <UserAdd v-if="selectedRow" :data="selectedRow" />
+      <UserView v-if="selectedRow" :data="selectedRow" @close="showDetails = false" />
+    </n-modal>
+    <n-modal v-model:show="showAddModal">
+      <UserAdd @close="showAddModal = false" />
     </n-modal>
   </n-flex>
 </template>

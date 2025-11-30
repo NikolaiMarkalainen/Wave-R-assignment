@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PageHeader from './components/PageHeader.vue'
-import { NConfigProvider } from 'naive-ui'
+import { NConfigProvider, NMessageProvider } from 'naive-ui'
 import 'vfonts/Roboto.css'
 </script>
 
@@ -23,8 +23,10 @@ import 'vfonts/Roboto.css'
       },
     }"
   >
-    <page-header></page-header>
-    <router-view />
+    <page-header />
+    <n-message-provider>
+      <router-view />
+    </n-message-provider>
   </n-config-provider>
 </template>
 
