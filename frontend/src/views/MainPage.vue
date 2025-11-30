@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { DataTableColumns, DataTableInst, DataTableRowKey } from 'naive-ui'
-import { NDataTable, NSpace, NButton, NIcon, NFlex, NModal } from 'naive-ui'
+import { NDataTable, NButton, NIcon, NFlex, NModal } from 'naive-ui'
 import { AddCircle, TrashBin } from '@vicons/ionicons5'
 import { ref } from 'vue'
 import { Occupations } from '@/types/types'
@@ -139,44 +139,39 @@ const handleAdd = () => {
 </script>
 
 <template>
-  <n-flex justify="center" class="table" size="large">
-    <n-space vertical :size="12">
-      <n-space>
-        <n-button type="success" v-on:click="handleAdd">
-          <template #icon>
-            <n-icon :component="AddCircle"> </n-icon>
-          </template>
-          Add
-        </n-button>
-        <n-button type="error" v-on:click="handleDelete">
-          <template #icon>
-            <n-icon :component="TrashBin"></n-icon>
-          </template>
-          Delete
-        </n-button>
-      </n-space>
-      <n-data-table
-        ref="dataTableInst"
-        :columns="columns"
-        :row-props="
-          (row: IUserInterface) => ({
-            onClick: (e: MouseEvent) => {
-              const target = e.target as HTMLElement
+  <n-flex size="large" style="margin: 2.5rem 5rem">
+    <n-button type="success" v-on:click="handleAdd">
+      <template #icon>
+        <n-icon :component="AddCircle"> </n-icon>
+      </template>
+      Add
+    </n-button>
+    <n-button type="error" v-on:click="handleDelete">
+      <template #icon>
+        <n-icon :component="TrashBin"></n-icon>
+      </template>
+      Delete
+    </n-button>
+    <n-data-table
+      ref="dataTableInst"
+      :columns="columns"
+      :row-props="
+        (row: IUserInterface) => ({
+          onClick: (e: MouseEvent) => {
+            const target = e.target as HTMLElement
 
-              if (target.closest('.n-checkbox-box')) {
-                return
-              }
-
-              handleRowClick(row)
-            },
-          })
-        "
-        :data="data"
-        :pagination="pagination"
-        :row-key="rowKey"
-        @update-checked-row-keys="handleCheck"
-      />
-    </n-space>
+            if (target.closest('.n-checkbox-box')) {
+              return
+            }
+            handleRowClick(row)
+          },
+        })
+      "
+      :data="data"
+      :pagination="pagination"
+      :row-key="rowKey"
+      @update-checked-row-keys="handleCheck"
+    />
     <n-modal v-model:show="showDetails">
       <UserView v-if="selectedRow" :data="selectedRow" @close="showDetails = false" />
     </n-modal>
@@ -185,13 +180,3 @@ const handleAdd = () => {
     </n-modal>
   </n-flex>
 </template>
-
-<style scoped>
-.table {
-  margin: 2.5rem 1rem 0;
-  width: 100vw;
-}
-:deep(.n-data-table-td) {
-  background: rgba(87, 199, 133, 1);
-}
-</style>

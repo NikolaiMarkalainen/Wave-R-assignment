@@ -21,6 +21,10 @@ import 'vfonts/Roboto.css'
         tabTextColorActiveBar: 'rgba(237, 221, 83, 1',
         tabTextColorHoverBar: 'rgba(237, 221, 83, 1',
       },
+      Pagination: {
+        buttonColor: 'rgba(42, 123, 155, 1',
+        buttonColorHover: 'rgba(237, 221, 83, 1',
+      },
     }"
   >
     <page-header />
