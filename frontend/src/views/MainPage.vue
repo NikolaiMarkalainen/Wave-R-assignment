@@ -3,7 +3,6 @@ import type { DataTableColumns, DataTableInst, DataTableRowKey } from 'naive-ui'
 import { NDataTable, NSpace, NButton, NIcon, NFlex, NModal } from 'naive-ui'
 import { AddCircle, TrashBin } from '@vicons/ionicons5'
 import { ref } from 'vue'
-import UserAdd from '@/components/UserAdd.vue'
 import { Occupations } from '@/types/types'
 import type { IUserInterface, IOccupations } from '@/types/types'
 import UserView from '@/components/UserView.vue'
@@ -182,7 +181,7 @@ const handleAdd = () => {
       <UserView v-if="selectedRow" :data="selectedRow" @close="showDetails = false" />
     </n-modal>
     <n-modal v-model:show="showAddModal">
-      <UserAdd @close="showAddModal = false" />
+      <UserView @close="showAddModal = false" />
     </n-modal>
   </n-flex>
 </template>
