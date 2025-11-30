@@ -1,30 +1,14 @@
 <script setup lang="ts">
 import type { DataTableColumns, DataTableInst, DataTableRowKey } from 'naive-ui'
-import { NDataTable, NSpace, NButton, NIcon } from 'naive-ui'
+import { NDataTable, NSpace, NButton, NIcon, NFlex, NModal } from 'naive-ui'
 import { AddCircle, TrashBin } from '@vicons/ionicons5'
 import { ref } from 'vue'
-type IOccupations = 'developer' | 'sales' | 'hr' | 'management' | 'customer_success' | 'tester'
+import type { IUserInterface } from '@/types/IUserObject'
+import type { IOccupations } from '@/types/OccupationRecords'
+import UserAdd from '@/components/UserAdd.vue'
+import { Occupations } from '@/types/OccupationRecords'
 
-const Occupations: Record<IOccupations, string> = {
-  developer: 'Developer',
-  sales: 'Sales',
-  hr: 'HR',
-  management: 'Management',
-  customer_success: 'Customer success',
-  tester: 'Tester',
-} as const
-
-interface IUserData {
-  id: number
-  firstname: string
-  lastname: string
-  age: number
-  occupation: string
-  salary: number
-  employed: number
-}
-
-const columns: DataTableColumns<IUserData> = [
+const columns: DataTableColumns<IUserInterface> = [
   { type: 'selection' },
   {
     title: 'Firstname',
@@ -64,7 +48,7 @@ const columns: DataTableColumns<IUserData> = [
   },
 ]
 
-const data: IUserData[] = [
+const data: IUserInterface[] = [
   {
     id: 1,
     firstname: 'James',
@@ -124,16 +108,24 @@ const pagination = ref({ pageSize: 5 })
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 const dataTableInst = ref<DataTableInst | null>(null)
 
-const rowKey = (row: IUserData) => {
+const showDetails = ref(false)
+const selectedRow = ref<IUserInterface | null>(null)
+
+const rowKey = (row: IUserInterface) => {
   return row.id
 }
 const handleCheck = (rowKeys: DataTableRowKey[]) => {
   checkedRowKeysRef.value = rowKeys
 }
+
+const handleRowClick = (row: IUserInterface) => {
+  showDetails.value = true
+  selectedRow.value = row
+}
 </script>
 
 <template>
-  <div class="table">
+  <n-flex justify="center" class="table" size="large">
     <n-space vertical :size="12">
       <n-space>
         <n-button type="success">
@@ -152,18 +144,27 @@ const handleCheck = (rowKeys: DataTableRowKey[]) => {
       <n-data-table
         ref="dataTableInst"
         :columns="columns"
+        :row-props="
+          (row: IUserInterface) => ({
+            onClick: () => handleRowClick(row),
+          })
+        "
         :data="data"
         :pagination="pagination"
         :row-key="rowKey"
         @update-checked-row-keys="handleCheck"
       />
     </n-space>
-  </div>
+    <n-modal v-model:show="showDetails">
+      <UserAdd v-if="selectedRow" :data="selectedRow" />
+    </n-modal>
+  </n-flex>
 </template>
 
 <style scoped>
 .table {
-  margin-top: 2.5rem;
+  margin: 2.5rem 1rem 0;
+  width: 100vw;
 }
 :deep(.n-data-table-td) {
   background: rgba(87, 199, 133, 1);

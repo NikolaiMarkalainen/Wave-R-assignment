@@ -13,6 +13,7 @@ import 'vfonts/Roboto.css'
         tdColorHover: 'rgba(237, 221, 83, 1',
         thColor: 'rgba(42, 123, 155, 1',
         tdColorSorting: 'rgba(42, 123, 155, 1',
+        thColorHover: 'rgba(237, 221, 83, 1',
       },
       Tabs: {
         tabTextColorHover: 'white',
@@ -35,7 +36,6 @@ body,
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-  margin: 0;
   background: linear-gradient(135deg, #1e1e2f, #121217);
   overflow-x: hidden;
 }
