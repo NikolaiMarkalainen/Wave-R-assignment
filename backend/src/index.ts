@@ -1,8 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import swaggerJsdoc from "swagger-jsdoc";
+import yaml from "yamljs";
 import swaggerUi from "swagger-ui-express";
+import employeeRouter from "./routes/employeeRoute.js";
+
 dotenv.config();
 
 const app = express();
@@ -23,8 +25,8 @@ const options = {
   apis: ["./src/routes/*.ts"],
 };
 
-const specs = swaggerJsdoc(options);
+const swaggerDocument = yaml.load("./src/docs/swagger.yaml");
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
-
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/employee", employeeRouter);
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

@@ -1,0 +1,177 @@
+openapi: 3.0.0
+info:
+  title: Employee & Auth API
+  version: 1.0.0
+  description: API for managing employees and authentication
+servers:
+  - url: http://localhost:5000
+paths:
+  /employee:
+    get:
+      tags:
+        - Employee
+      summary: Get basic employee route message
+      description: Returns a simple text response for testing
+      responses:
+        "200":
+          description: Successful response
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Employee route
+    post:
+      tags:
+        - Employee
+      summary: Create a new employee
+      description: Creates a new employee (dummy placeholder)
+      requestBody:
+        description: Employee data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: John Doe
+                role: Developer
+      responses:
+        "201":
+          description: Employee created
+    delete:
+      tags:
+        - Employee
+      summary: Delete employees
+      description: Delete one or multiple employees
+      requestBody:
+        description: Array of employee IDs to delete
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+              example:
+                ids: ["1", "2", "3"]
+      responses:
+        "200":
+          description: Employees deleted
+  /employee/{id}:
+    get:
+      tags:
+        - Employee
+      summary: Get employee by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Employee ID
+      responses:
+        "200":
+          description: Returns employee info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: string
+                example:
+                  message: Employee by ID
+                  id: "123"
+    put:
+      tags:
+        - Employee
+      summary: Update employee by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Employee ID
+      requestBody:
+        description: Updated employee data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: John Smith
+                role: Senior Developer
+      responses:
+        "200":
+          description: Employee updated
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: User login
+      description: Authenticate user and return JWT token
+      requestBody:
+        description: Login credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              example:
+                username: johndoe
+                password: secret
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                example:
+                  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        "401":
+          description: Invalid credentials
+  /register:
+    post:
+      tags:
+        - Auth
+      summary: User registration
+      description: Register a new user
+      requestBody:
+        description: User registration info
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                email:
+                  type: string
+              example:
+                username: johndoe
+                password: secret
+                email: johndoe@example.com
+      responses:
+        "201":
+          description: Registration successful
+        "400":
+          description: User already exists
