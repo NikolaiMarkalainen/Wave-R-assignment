@@ -57,15 +57,8 @@ export const updateEmployee = async (id: string, body: IEmployee) => {
 };
 
 export const createEmployee = async (body: IEmployee) => {
-  if (
-    !body ||
-    !body.firstname ||
-    !body.lastname ||
-    body.age === undefined ||
-    !body.occupation ||
-    body.salary === undefined ||
-    !body.employed
-  ) {
+  const { firstname, lastname, age, occupation, salary, employed } = body;
+  if (!body || !firstname || !lastname || !age || !occupation || !salary || !employed) {
     throw BadRequest('Missing required data to create employee');
   }
   const created = await prisma.employee.create({

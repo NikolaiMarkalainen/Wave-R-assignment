@@ -8,8 +8,11 @@ import {
 } from '../services/employeeService.js';
 import { IEmployee } from '../types/types.js';
 import { asyncHandler } from '../middleware/asyncHandler.js';
+import { protectedRoute } from '../middleware/auth.js';
 
 const router = express.Router();
+
+router.use(protectedRoute);
 
 router.get(
   '/',

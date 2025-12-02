@@ -12,3 +12,4 @@ export const BadRequest = (message = 'Bad request') => new ApiError(400, message
 export const NotFound = (message = 'Resource not found') => new ApiError(404, message);
 export const InternalServerError = (message = 'Internal server error') =>
   new ApiError(500, message);
+export const TokenError = (message = 'Invalid or expired token') => new ApiError(401, message);

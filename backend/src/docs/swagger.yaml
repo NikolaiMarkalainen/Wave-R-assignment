@@ -5,6 +5,13 @@ info:
   description: API for managing employees and authentication
 servers:
   - url: http://localhost:5000
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
 paths:
   /employee:
     get:
@@ -12,6 +19,8 @@ paths:
         - Employee
       summary: Get paginated list of employees
       description: Returns a paginated list of employees with metadata.
+      security:
+        - bearerAuth: []
       parameters:
         - in: query
           name: page
@@ -92,6 +101,16 @@ paths:
                   error:
                     type: string
                     example: Invalid pagination parameters
+        '401':
+          description: Unauthorized, token missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: No token provided
         '500':
           description: Internal server error
           content:
@@ -108,6 +127,8 @@ paths:
         - Employee
       summary: Create a new employee
       description: Creates a new employee with full details.
+      security:
+        - bearerAuth: []
       requestBody:
         description: Employee data
         required: true
@@ -190,6 +211,16 @@ paths:
                   error:
                     type: string
                     example: Missing required data to create employee
+        '401':
+          description: Unauthorized, token missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: No token provided
         '500':
           description: Internal server error
           content:
@@ -206,6 +237,8 @@ paths:
         - Employee
       summary: Delete multiple employees
       description: Delete one or more employees by ID.
+      security:
+        - bearerAuth: []
       requestBody:
         description: Array of employee IDs to delete
         required: true
@@ -241,6 +274,16 @@ paths:
                   error:
                     type: string
                     example: No employee IDs were provided
+        '401':
+          description: Unauthorized, token missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: No token provided
         '404':
           description: No matching employees found
           content:
@@ -259,6 +302,8 @@ paths:
       tags:
         - Employee
       summary: Get employee by ID
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -298,6 +343,16 @@ paths:
                     example: 2022-05-10
         '400':
           description: Missing or invalid ID
+        '401':
+          description: Unauthorized, token missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: No token provided
         '404':
           description: Employee not found
         '500':
@@ -307,6 +362,8 @@ paths:
       tags:
         - Employee
       summary: Update employee by ID
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -354,12 +411,22 @@ paths:
           description: Employee updated successfully
         '400':
           description: Missing or invalid data
+        '401':
+          description: Unauthorized, token missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: No token provided
         '404':
           description: Employee not found
         '500':
           description: Internal server error
 
-  /login:
+  /auth/login:
     post:
       tags:
         - Auth
@@ -403,7 +470,7 @@ paths:
                     type: string
                     example: Invalid username or password
 
-  /register:
+  /auth/register:
     post:
       tags:
         - Auth
@@ -421,12 +488,9 @@ paths:
                   type: string
                 password:
                   type: string
-                email:
-                  type: string
               example:
                 username: johndoe
                 password: secret
-                email: johndoe@example.com
       responses:
         '201':
           description: Registration successful
