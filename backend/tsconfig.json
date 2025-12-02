@@ -26,6 +26,6 @@
     "noUnusedParameters": false,
     "isolatedModules": false
   },
-  "include": ["src/**/*", "generated/prisma/**/*"],
+  "include": ["src/**/*", "generated/prisma/**/*", "prisma/seed.ts"],
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,3 @@
-import { verify } from 'crypto';
 import { prisma } from '../../lib/prisma.js';
 import { IRegister, ILogin, JwtPayload } from '../types/types.js';
 import { BadRequest } from '../utils/errors.js';
