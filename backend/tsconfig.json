@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./dist",
 
     "module": "NodeNext",
@@ -26,6 +26,6 @@
     "noUnusedParameters": false,
     "isolatedModules": false
   },
-  "include": ["src"],
+  "include": ["src/**/*", "generated/prisma/**/*"],
   "exclude": ["node_modules"]
 }

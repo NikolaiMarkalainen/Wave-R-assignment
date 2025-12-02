@@ -10,21 +10,104 @@ paths:
     get:
       tags:
         - Employee
-      summary: Get basic employee route message
-      description: Returns a simple text response for testing
+      summary: Get paginated list of employees
+      description: Returns a paginated list of employees with metadata.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+          description: Page number (default is 1)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+          description: Number of employees per page (default 10)
       responses:
-        "200":
-          description: Successful response
+        '200':
+          description: Paginated list of employees
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: Employee route
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 1
+                  limit:
+                    type: integer
+                    example: 10
+                  total:
+                    type: integer
+                    example: 35
+                  totalPages:
+                    type: integer
+                    example: 4
+                  employees:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        firstname:
+                          type: string
+                          example: Alice
+                        lastname:
+                          type: string
+                          example: Smith
+                        age:
+                          type: integer
+                          example: 28
+                        occupation:
+                          type: string
+                          enum:
+                            - developer
+                            - sales
+                            - hr
+                            - management
+                            - customer_success
+                            - tester
+                          example: developer
+                        salary:
+                          type: number
+                          example: 55000
+                        employed:
+                          type: string
+                          format: date
+                          example: 2022-05-10
+        '400':
+          description: Invalid query parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid pagination parameters
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+
     post:
       tags:
         - Employee
       summary: Create a new employee
-      description: Creates a new employee (dummy placeholder)
+      description: Creates a new employee with full details.
       requestBody:
         description: Employee data
         required: true
@@ -32,17 +115,97 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - firstname
+                - lastname
+                - age
+                - occupation
+                - salary
+                - employed
+              properties:
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                age:
+                  type: integer
+                occupation:
+                  type: string
+                  enum:
+                    - developer
+                    - sales
+                    - hr
+                    - management
+                    - customer_success
+                    - tester
+                salary:
+                  type: number
+                employed:
+                  type: string
+                  format: date
               example:
-                name: John Doe
-                role: Developer
+                firstname: John
+                lastname: Doe
+                age: 30
+                occupation: developer
+                salary: 60000
+                employed: 2024-01-15
       responses:
-        "201":
-          description: Employee created
+        '201':
+          description: Employee created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  firstname:
+                    type: string
+                    example: John
+                  lastname:
+                    type: string
+                    example: Doe
+                  age:
+                    type: integer
+                    example: 30
+                  occupation:
+                    type: string
+                    example: developer
+                  salary:
+                    type: number
+                    example: 60000
+                  employed:
+                    type: string
+                    format: date
+                    example: 2024-01-15
+        '400':
+          description: Missing or invalid fields
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing required data to create employee
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+
     delete:
       tags:
         - Employee
-      summary: Delete employees
-      description: Delete one or multiple employees
+      summary: Delete multiple employees
+      description: Delete one or more employees by ID.
       requestBody:
         description: Array of employee IDs to delete
         required: true
@@ -56,10 +219,41 @@ paths:
                   items:
                     type: string
               example:
-                ids: ["1", "2", "3"]
+                ids: ['1', '2', '3']
       responses:
-        "200":
-          description: Employees deleted
+        '200':
+          description: Employees deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: integer
+                    example: 3
+        '400':
+          description: No employee IDs provided
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: No employee IDs were provided
+        '404':
+          description: No matching employees found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: No matching employees found
+        '500':
+          description: Internal server error
+
   /employee/{id}:
     get:
       tags:
@@ -73,20 +267,42 @@ paths:
             type: string
           description: Employee ID
       responses:
-        "200":
-          description: Returns employee info
+        '200':
+          description: Employee found
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message:
-                    type: string
                   id:
+                    type: integer
+                    example: 1
+                  firstname:
                     type: string
-                example:
-                  message: Employee by ID
-                  id: "123"
+                    example: Alice
+                  lastname:
+                    type: string
+                    example: Smith
+                  age:
+                    type: integer
+                    example: 28
+                  occupation:
+                    type: string
+                    example: developer
+                  salary:
+                    type: number
+                    example: 55000
+                  employed:
+                    type: string
+                    format: date
+                    example: 2022-05-10
+        '400':
+          description: Missing or invalid ID
+        '404':
+          description: Employee not found
+        '500':
+          description: Internal server error
+
     put:
       tags:
         - Employee
@@ -105,12 +321,44 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                age:
+                  type: integer
+                occupation:
+                  type: string
+                  enum:
+                    - developer
+                    - sales
+                    - hr
+                    - management
+                    - customer_success
+                    - tester
+                salary:
+                  type: number
+                employed:
+                  type: string
+                  format: date
               example:
-                name: John Smith
-                role: Senior Developer
+                firstname: John
+                lastname: Smith
+                age: 35
+                occupation: developer
+                salary: 70000
+                employed: 2024-01-01
       responses:
-        "200":
-          description: Employee updated
+        '200':
+          description: Employee updated successfully
+        '400':
+          description: Missing or invalid data
+        '404':
+          description: Employee not found
+        '500':
+          description: Internal server error
+
   /login:
     post:
       tags:
@@ -133,7 +381,7 @@ paths:
                 username: johndoe
                 password: secret
       responses:
-        "200":
+        '200':
           description: Login successful
           content:
             application/json:
@@ -144,8 +392,17 @@ paths:
                     type: string
                 example:
                   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-        "401":
+        '401':
           description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid username or password
+
   /register:
     post:
       tags:
@@ -171,7 +428,17 @@ paths:
                 password: secret
                 email: johndoe@example.com
       responses:
-        "201":
+        '201':
           description: Registration successful
-        "400":
+        '400':
           description: User already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: User already exists
+        '500':
+          description: Internal server error

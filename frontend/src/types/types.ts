@@ -5,7 +5,7 @@ export interface IUserInterface {
   age: number
   occupation: string
   salary: number
-  employed: number
+  employed: Date
 }
 export type IOccupations =
   | 'developer'
