@@ -6,7 +6,7 @@ import {
   updateEmployee,
   createEmployee,
 } from '../services/employeeService.js';
-import { IEmployee } from '../types/types.js';
+import { IEmployee, IOccupations } from '../types/types.js';
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { protectedRoute } from '../middleware/auth.js';
 
@@ -17,18 +17,10 @@ router.use(protectedRoute);
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
-    const skip = (page - 1) * limit;
-
-    const { employees, total } = await getAllEmployees({ skip, take: limit });
-
+    const result = await getAllEmployees(req.query);
     res.status(200).json({
-      page,
-      limit,
-      total,
-      totalPages: Math.ceil(total / limit),
-      employees,
+      ...result,
+      totalPages: Math.ceil(result.total / result.pageSize),
     });
   })
 );

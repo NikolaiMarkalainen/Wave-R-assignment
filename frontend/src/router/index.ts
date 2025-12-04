@@ -14,6 +14,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, _, next) => {
   const auth = useAuth();
+  await auth.checkAuth();
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   console.log(auth.isAuthenticated.value);
   if (requiresAuth && !auth.isAuthenticated.value) {

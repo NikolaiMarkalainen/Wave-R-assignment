@@ -1,3 +1,4 @@
+import { Employee } from '../../generated/prisma/client.js';
 import { Occupation } from '../../generated/prisma/enums.js';
 import type { Request } from 'express';
 export interface IEmployee {
@@ -32,4 +33,19 @@ export const CookieType: Record<string, cookieTypes> = {
 
 export interface AuthRequest extends Request {
   user?: { userId: number; username: string };
+}
+export type IOccupations =
+  | 'developer'
+  | 'sales'
+  | 'hr'
+  | 'management'
+  | 'customer_success'
+  | 'tester';
+
+export interface IQueryParams {
+  occupation?: IOccupations[];
+  sortBy?: string;
+  sortDir?: 'asc' | 'desc';
+  page?: number;
+  pageSize?: number;
 }

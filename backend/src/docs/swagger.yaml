@@ -11,14 +11,13 @@ components:
       type: apiKey
       in: cookie
       name: access_token
-
 paths:
   /employee:
     get:
       tags:
         - Employee
-      summary: Get paginated list of employees
-      description: Returns a paginated list of employees with metadata.
+      summary: Get paginated, filtered, and sorted list of employees
+      description: Returns a paginated list of employees with optional occupation filter and sorting.
       security:
         - cookieAuth: []
       parameters:
@@ -29,6 +28,7 @@ paths:
             default: 1
             minimum: 1
           description: Page number (default is 1)
+
         - in: query
           name: limit
           schema:
@@ -36,10 +36,45 @@ paths:
             default: 10
             minimum: 1
             maximum: 100
-          description: Number of employees per page (default 10)
+          description: Number of employees per page
+
+        - in: query
+          name: occupation
+          schema:
+            type: string
+            enum:
+              - developer
+              - sales
+              - hr
+              - management
+              - customer_success
+              - tester
+          description: Filter by employee occupation
+
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum:
+              - firstname
+              - lastname
+              - age
+              - occupation
+              - salary
+              - employed
+          description: Field to sort by
+
+        - in: query
+          name: sortDir
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+          description: Sort direction (ascending or descending)
+
       responses:
         '200':
-          description: Paginated list of employees
+          description: Paginated and filtered list of employees
           content:
             application/json:
               schema:
@@ -63,7 +98,7 @@ paths:
                       type: object
                       properties:
                         id:
-                          type: integerIEmployee
+                          type: integer
                           example: 1
                         firstname:
                           type: string
@@ -91,6 +126,7 @@ paths:
                           type: string
                           format: date
                           example: 2022-05-10
+
         '400':
           description: Invalid query parameters
           content:
@@ -101,6 +137,7 @@ paths:
                   error:
                     type: string
                     example: Invalid pagination parameters
+
         '401':
           description: Unauthorized, token missing or invalid
           content:
@@ -111,6 +148,7 @@ paths:
                   error:
                     type: string
                     example: No token provided
+
         '500':
           description: Internal server error
           content:
@@ -121,7 +159,6 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-
     post:
       tags:
         - Employee

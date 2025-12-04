@@ -32,7 +32,6 @@ const handleLogin = async () => {
   writeMessage(result);
   if (result.success) {
     loginSuccess();
-    console.log('NAVIGATE U CUNT');
     router.push('/');
   }
 };

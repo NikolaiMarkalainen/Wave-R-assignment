@@ -13,7 +13,7 @@ router.post(
 
     response.cookie('access_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
       maxAge: 7257600000,
       sameSite: 'lax',
     });

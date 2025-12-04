@@ -5,7 +5,6 @@ import { CookieType, cookieTypes } from '../types/types.js';
 import { AuthRequest } from '../types/types.js';
 
 export const protectedRoute = (request: AuthRequest, response: Response, next: NextFunction) => {
-  console.log(getCookieHeader(request, CookieType.JWT));
   try {
     const token = getCookieHeader(request, CookieType.JWT);
 
@@ -23,6 +22,7 @@ export const protectedRoute = (request: AuthRequest, response: Response, next: N
 const getCookieHeader = (request: AuthRequest, cookieType: cookieTypes) => {
   var allCookies = request.headers.cookie;
   const cookiePair = allCookies?.split('; ').find((cookie) => cookie.trim().startsWith(cookieType));
+
   if (!cookiePair) {
     return undefined;
   }

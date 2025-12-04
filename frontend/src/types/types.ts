@@ -56,3 +56,16 @@ export interface MessageResult {
   success: boolean;
   message: string;
 }
+
+export interface queryParams {
+  page?: number;
+  pageSize?: number;
+  occupation?: IOccupations | IOccupations[] | undefined;
+  sortBy?: keyof IEmployeePayload;
+  sortDir?: 'asc' | 'desc' | null;
+}
+
+export interface IEmployeeTableSorter {
+  key: keyof Omit<IEmployee, 'id'>;
+  order: 'asc' | 'desc';
+}

@@ -1,22 +1,46 @@
+import { EmployeeOrderByWithRelationInput } from '../../generated/prisma/models.js';
 import { prisma } from '../../lib/prisma.js';
-import { IEmployee } from '../types/types.js';
+import { IEmployee, IOccupations, IQueryParams } from '../types/types.js';
 import { BadRequest, NotFound } from '../utils/errors.js';
 
-export const getAllEmployees = async (params: { skip: number; take: number }) => {
-  if (params.skip < 0 || params.take <= 0) {
-    throw BadRequest('Invalid pagination parameters');
+export const getAllEmployees = async (params: IQueryParams) => {
+  const where: any = {};
+  const { occupation, page, pageSize, sortDir, sortBy } = params;
+  const realPageSize = pageSize || 10;
+  const pageN = page || 1;
+  let occupationList: IOccupations[] | undefined;
+  console.log('asd', occupation);
+
+  if (occupation) {
+    if (Array.isArray(occupation)) {
+      occupationList = occupation.map((o) => (o as string).toLowerCase() as IOccupations);
+    } else {
+      occupationList = [(occupation as string).toLowerCase() as IOccupations];
+    }
   }
+
+  if (occupationList?.length) {
+    where.occupation = { in: occupationList };
+  }
+  const orderBy = sortBy
+    ? ({
+        [sortBy]: sortDir,
+      } as EmployeeOrderByWithRelationInput)
+    : ({ id: 'asc' } as EmployeeOrderByWithRelationInput);
+
+  const skip = (pageN - 1) * realPageSize;
 
   const [employees, total] = await Promise.all([
     prisma.employee.findMany({
-      skip: params.skip,
-      take: params.take,
-      orderBy: { id: 'asc' },
+      skip,
+      take: Number(realPageSize),
+      where,
+      orderBy,
     }),
-    prisma.employee.count(),
+    prisma.employee.count({ where }),
   ]);
 
-  return { employees, total };
+  return { employees, total, page: pageN, pageSize: realPageSize };
 };
 
 export const getEmployeeById = async (id: string) => {

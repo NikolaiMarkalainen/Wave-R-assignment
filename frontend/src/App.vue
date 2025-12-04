@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import PageHeader from './components/PageHeader.vue'
-import { NConfigProvider, NMessageProvider } from 'naive-ui'
-import 'vfonts/Roboto.css'
+import PageHeader from './components/PageHeader.vue';
+import { NConfigProvider, NMessageProvider } from 'naive-ui';
+import 'vfonts/Roboto.css';
 </script>
 
 <template>
@@ -24,6 +24,7 @@ import 'vfonts/Roboto.css'
       Pagination: {
         buttonColor: 'rgba(42, 123, 155, 1',
         buttonColorHover: 'rgba(237, 221, 83, 1',
+        itemTextColor: 'white',
       },
     }"
   >
