@@ -2,10 +2,7 @@ import { NextFunction, Response, Request } from 'express';
 import { verifyToken } from '../utils/jwt.js';
 import { TokenError } from '../utils/errors.js';
 import { CookieType, cookieTypes } from '../types/types.js';
-
-export interface AuthRequest extends Request {
-  user?: { userId: number; username: string };
-}
+import { AuthRequest } from '../types/types.js';
 
 export const protectedRoute = (request: AuthRequest, response: Response, next: NextFunction) => {
   console.log(getCookieHeader(request, CookieType.JWT));

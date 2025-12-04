@@ -1,6 +1,17 @@
 <script setup lang="ts">
-import { NBreadcrumb, NBreadcrumbItem, NPageHeader, NAvatar, NIcon, NFlex } from 'naive-ui'
-import { PeopleOutline } from '@vicons/ionicons5'
+import { NBreadcrumb, NBreadcrumbItem, NPageHeader, NAvatar, NIcon, NFlex } from 'naive-ui';
+import { PeopleOutline } from '@vicons/ionicons5';
+import { useAuth } from '@/composables/useAuth';
+import { useRouter } from 'vue-router';
+
+const { isAuthenticated, checkAuth, logout } = useAuth();
+const router = useRouter();
+const handleLogout = async () => {
+  await logout();
+  router.push('/login');
+};
+
+checkAuth();
 </script>
 
 <template>
@@ -18,7 +29,12 @@ import { PeopleOutline } from '@vicons/ionicons5'
       </template>
       <n-breadcrumb separator="-" style="padding-bottom: 1rem; padding-left: 2rem">
         <n-breadcrumb-item>
-          <router-link to="/login">Login</router-link>
+          <template v-if="isAuthenticated">
+            <router-link to="/login" @click.prevent="handleLogout">Logout</router-link>
+          </template>
+          <template v-else>
+            <router-link to="/login">Login</router-link>
+          </template>
         </n-breadcrumb-item>
         <n-breadcrumb-item>
           <router-link to="/">Home</router-link>

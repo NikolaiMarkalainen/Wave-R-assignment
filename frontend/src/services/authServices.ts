@@ -1,53 +1,69 @@
-import type { ICreateUserPayload, ILoginPayload } from '@/types/types'
+import type { ApiResult, ICreateUserPayload, ILoginPayload } from '@/types/types';
 
 // Use import.meta.env to access environment variables exposed by Vite.
 // We default to the /api proxy path configured in vite.config.js.
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
-export const createUserService = async (payload: ICreateUserPayload) => {
-  const url = `${API_BASE_URL}/register`
+export const createUserService = async (payload: ICreateUserPayload): Promise<ApiResult> => {
+  const url = `${API_URL}/auth/register/`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return await returnAuthObject(response);
+};
+
+export const loginUserService = async (payload: ILoginPayload): Promise<ApiResult> => {
+  const url = `${API_URL}/auth/login`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+
+  return await returnAuthObject(response);
+};
+
+const returnAuthObject = async (response: Response): Promise<ApiResult> => {
+  const rawText = await response.text();
+  let msg: string;
 
   try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      throw new Error(`Registration failed: ${response.status} - ${errorText}`)
-    }
-
-    return response.json()
-  } catch (error) {
-    console.error('Error during user creation:', error)
-    throw error
+    const data = JSON.parse(rawText);
+    msg = data.message || data.error || rawText;
+  } catch {
+    msg = rawText;
   }
-}
+  return {
+    status: response.status,
+    ok: response.ok,
+    message: msg,
+  };
+};
 
-export const loginUserService = async (payload: ILoginPayload) => {
-  const url = `${API_BASE_URL}/login`
+export const verifyToken = async () => {
+  const url = `${API_URL}/auth/me`;
 
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
+  const response = await fetch(url, {
+    method: 'GET',
+    credentials: 'include',
+  });
+  return response.ok;
+};
 
-    if (!response.ok) {
-      const errorText = await response.text()
-      throw new Error(`Login failed: ${response.status} - ${errorText}`)
-    }
+export const logoutUser = async () => {
+  const url = `${API_URL}/auth/logout`;
 
-    return response.json()
-  } catch (error) {
-    console.error('Error during user login:', error)
-    throw error
-  }
-}
+  const response = await fetch(url, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  return response.ok;
+};

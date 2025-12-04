@@ -1,5 +1,5 @@
 import { Occupation } from '../../generated/prisma/enums.js';
-
+import type { Request } from 'express';
 export interface IEmployee {
   firstname: string;
   lastname: string;
@@ -29,3 +29,7 @@ export type cookieTypes = 'access_token' | 'test';
 export const CookieType: Record<string, cookieTypes> = {
   JWT: 'access_token',
 };
+
+export interface AuthRequest extends Request {
+  user?: { userId: number; username: string };
+}
