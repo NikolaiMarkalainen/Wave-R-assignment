@@ -23,6 +23,7 @@ services:
       - postgres
     environment:
       NODE_ENV: development
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules

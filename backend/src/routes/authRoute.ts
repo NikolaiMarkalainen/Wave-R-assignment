@@ -7,16 +7,21 @@ const router = express.Router();
 router.post(
   '/login',
   asyncHandler(async (request, response) => {
-    // handle auth here and send cookie back with jwt auth token
-    const r = await loginUser(request.body);
-    response.status(200).json(r);
+    const token = await loginUser(request.body);
+
+    response.cookie('access_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 7257600000,
+      sameSite: 'lax',
+    });
+    response.status(200).json({ success: true, message: 'Login successful' });
   })
 );
 
 router.post(
   '/register',
   asyncHandler(async (request, response) => {
-    // handle registering here and return status if completed
     const r = await registerUser(request.body);
     response.status(200).json(r);
   })

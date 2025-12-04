@@ -12,27 +12,27 @@ import {
 } from 'naive-ui'
 import { ref, watch } from 'vue'
 import type { FormInst } from 'naive-ui'
-import type { IUserInterface } from '@/types/types'
+import type { IEmployee } from '@/types/types'
 import { Occupations } from '@/types/types'
 import { employeeFormRules } from '@/helpers/forms'
 
 interface Props {
-  data?: IUserInterface
+  data?: IEmployee
 }
 const props = defineProps<Props>()
 const emit = defineEmits(['close'])
 
-const modelRef = ref<IUserInterface>(
+const modelRef = ref<IEmployee>(
   props.data
     ? { ...props.data }
     : {
-        id: Date.now(),
+        id: 0,
         firstname: '',
         lastname: '',
         age: 0,
         occupation: Occupations.developer,
         salary: 0,
-        employed: Date.now(),
+        employed: new Date(Date.now()),
       },
 )
 

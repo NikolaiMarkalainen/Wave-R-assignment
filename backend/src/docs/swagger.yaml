@@ -7,10 +7,10 @@ servers:
   - url: http://localhost:5000
 components:
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: access_token
 
 paths:
   /employee:
@@ -20,7 +20,7 @@ paths:
       summary: Get paginated list of employees
       description: Returns a paginated list of employees with metadata.
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - in: query
           name: page
@@ -63,7 +63,7 @@ paths:
                       type: object
                       properties:
                         id:
-                          type: integer
+                          type: integerIEmployee
                           example: 1
                         firstname:
                           type: string
@@ -128,7 +128,7 @@ paths:
       summary: Create a new employee
       description: Creates a new employee with full details.
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       requestBody:
         description: Employee data
         required: true
@@ -238,7 +238,7 @@ paths:
       summary: Delete multiple employees
       description: Delete one or more employees by ID.
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       requestBody:
         description: Array of employee IDs to delete
         required: true
@@ -303,7 +303,7 @@ paths:
         - Employee
       summary: Get employee by ID
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - in: path
           name: id
@@ -363,7 +363,7 @@ paths:
         - Employee
       summary: Update employee by ID
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - in: path
           name: id
@@ -458,7 +458,8 @@ paths:
                   token:
                     type: string
                 example:
-                  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  'success': true,
+                  'message': 'Login successful'
         '401':
           description: Invalid credentials
           content:

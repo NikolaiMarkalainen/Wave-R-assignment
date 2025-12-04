@@ -23,3 +23,9 @@ export interface ILogin {
   username: string;
   password: string;
 }
+
+export type cookieTypes = 'access_token' | 'test';
+
+export const CookieType: Record<string, cookieTypes> = {
+  JWT: 'access_token',
+};

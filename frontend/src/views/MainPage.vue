@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import type { DataTableColumns, DataTableInst, DataTableRowKey } from 'naive-ui'
+import type { DataTableColumns, DataTableInst, DataTableRowKey, PaginationProps } from 'naive-ui'
 import { NDataTable, NButton, NIcon, NFlex, NModal } from 'naive-ui'
 import { AddCircle, TrashBin } from '@vicons/ionicons5'
 import { ref } from 'vue'
 import { Occupations } from '@/types/types'
-import type { IUserInterface, IOccupations } from '@/types/types'
+import type { IEmployee, IOccupations } from '@/types/types'
 import UserView from '@/components/UserView.vue'
-const columns: DataTableColumns<IUserInterface> = [
+
+const columns: DataTableColumns<IEmployee> = [
   { type: 'selection' },
   {
     title: 'Firstname',
@@ -42,79 +43,54 @@ const columns: DataTableColumns<IUserInterface> = [
   {
     title: 'Employed',
     key: 'employed',
-    sorter: (row1, row2) => row1.employed - row2.employed,
+    sorter: (row1, row2) => {
+      const dateA = new Date(row1.employed).getTime()
+      const dateB = new Date(row2.employed).getTime()
+
+      return dateA - dateB
+    },
   },
 ]
 
-const data: IUserInterface[] = [
-  {
-    id: 1,
-    firstname: 'James',
-    lastname: 'Thompson',
-    age: 34,
-    occupation: Occupations.developer,
-    salary: 82000,
-    employed: 2023,
-  },
-  {
-    id: 2,
-    firstname: 'Sarah',
-    lastname: 'Mitchell',
-    age: 29,
-    occupation: Occupations.sales,
-    salary: 61000,
-    employed: 2024,
-  },
-  {
-    id: 3,
-    firstname: 'Robert',
-    lastname: 'Carter',
-    age: 41,
-    occupation: Occupations.management,
-    salary: 102000,
-    employed: 2023,
-  },
-  {
-    id: 4,
-    firstname: 'Emily',
-    lastname: 'Hughes',
-    age: 26,
-    occupation: Occupations.hr,
-    salary: 54000,
-    employed: 2021,
-  },
-  {
-    id: 5,
-    firstname: 'Daniel',
-    lastname: 'Rodriguez',
-    age: 31,
-    occupation: Occupations.customer_success,
-    salary: 58000,
-    employed: 2019,
-  },
-  {
-    id: 6,
-    firstname: 'Natalie',
-    lastname: 'Brooks',
-    age: 23,
-    occupation: Occupations.tester,
-    salary: 48000,
-    employed: 2019,
-  },
-]
-const pagination = ref({ pageSize: 5 })
+// const pagination = ref<PaginationProps>({
+//   page: page,
+//   pageSize: limit,
+//   pageSizes: [10, 25, 50, 100],
+//   showSizePicker: true,
+//   itemCount: 10,
+//   pageCount: 100,
+
+//   // Handlers
+//   onUpdatePage: (page: number) => {
+//     // 1. Update the component's internal state
+//     apiParams.page = page
+//     // 2. Trigger the fetch function (defined in step 2)
+//     fetchEmployees()
+//   },
+
+//   // Handlers for Page Size
+//   onUpdatePageSize: (pageSize: number) => {
+//     // 1. Update the component's internal state
+//     apiParams.limit = pageSize
+//     // 2. Reset the page to 1 whenever page size changes
+//     apiParams.page = 1
+//     pagination.page = 1
+//     // 3. Trigger the fetch function
+//     fetchEmployees()
+//   },
+// })
 
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
-const checkedRows = ref<IUserInterface[]>([])
+const checkedRows = ref<IEmployee[]>([])
 
 const dataTableInst = ref<DataTableInst | null>(null)
 
 const showDetails = ref(false)
-const selectedRow = ref<IUserInterface | null>(null)
+const selectedRow = ref<IEmployee | null>(null)
 
 const showAddModal = ref(false)
 
-const rowKey = (row: IUserInterface) => {
+const rowKey = (row: IEmployee) => {
   return row.id
 }
 const handleCheck = (rowKeys: DataTableRowKey[]) => {
@@ -122,7 +98,7 @@ const handleCheck = (rowKeys: DataTableRowKey[]) => {
   checkedRows.value = data.filter((row) => rowKeys.includes(rowKey(row)))
 }
 
-const handleRowClick = (row: IUserInterface) => {
+const handleRowClick = (row: IEmployee) => {
   showDetails.value = true
   selectedRow.value = row
 }
@@ -156,7 +132,7 @@ const handleAdd = () => {
       ref="dataTableInst"
       :columns="columns"
       :row-props="
-        (row: IUserInterface) => ({
+        (row: IEmployee) => ({
           onClick: (e: MouseEvent) => {
             const target = e.target as HTMLElement
 

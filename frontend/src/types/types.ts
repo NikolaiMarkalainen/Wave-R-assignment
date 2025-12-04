@@ -1,4 +1,4 @@
-export interface IUserInterface {
+export interface IEmployee {
   id: number
   firstname: string
   lastname: string
@@ -36,4 +36,12 @@ export interface ILoginPayload {
   password: string
 }
 
-export type IEmployeePayload = Omit<IUserInterface, 'id'>
+export type IEmployeePayload = Omit<IEmployee, 'id'>
+
+export interface IEmployeePaginationResponse {
+  page: number
+  limit: number
+  total: number
+  totalPages: number
+  employees: IEmployee[]
+}
