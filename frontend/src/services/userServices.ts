@@ -1,17 +1,38 @@
-import type { ICreateUserPayload, queryParams } from '@/types/types';
+import type { IEmployeePut, queryParams } from '@/types/types';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
-export const postEmployeeService = (payload: ICreateUserPayload) => {
-  console.log('POST: postemployeeService ', payload);
+export const postEmployeeService = async (payload: IEmployeePut) => {
+  const url = `${API_URL}/employee`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+  console.log(response);
 };
 
 export const deleteEmployeeService = (payload: number[]) => {
   console.log('DELETE: deleteemployeeService ', payload);
 };
 
-export const putEmployeeService = (payload: ICreateUserPayload) => {
-  console.log('PUT: putemployeeService', payload);
+export const putEmployeeService = async (payload: IEmployeePut) => {
+  if (!payload.id) throw new Error('Missing employee ID');
+  const url = `${API_URL}/employee/${payload.id}`;
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Failed to update employee: ${errText}`);
+  }
+
+  return response.json();
 };
 
 export const getEmployeeService = async (params: queryParams) => {

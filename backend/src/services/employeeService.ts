@@ -9,7 +9,6 @@ export const getAllEmployees = async (params: IQueryParams) => {
   const realPageSize = pageSize || 10;
   const pageN = page || 1;
   let occupationList: IOccupations[] | undefined;
-  console.log('asd', occupation);
 
   if (occupation) {
     if (Array.isArray(occupation)) {
@@ -85,6 +84,7 @@ export const createEmployee = async (body: IEmployee) => {
   if (!body || !firstname || !lastname || !age || !occupation || !salary || !employed) {
     throw BadRequest('Missing required data to create employee');
   }
+  body.employed = new Date(body.employed);
   const created = await prisma.employee.create({
     data: body,
   });

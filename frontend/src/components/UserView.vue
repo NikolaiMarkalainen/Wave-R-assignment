@@ -12,29 +12,39 @@ import {
 } from 'naive-ui';
 import { ref, watch } from 'vue';
 import type { FormInst } from 'naive-ui';
-import type { IEmployee } from '@/types/types';
+import type { IEmployee, IEmployeePut } from '@/types/types';
 import { Occupations } from '@/types/types';
 import { employeeFormRules } from '@/helpers/forms';
+import { postEmployeeService, putEmployeeService } from '@/services/userServices';
 
 interface Props {
   data?: IEmployee;
 }
 const props = defineProps<Props>();
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'updated']);
 
-const modelRef = ref<IEmployee>(
+console.log(props);
+const modelRef = ref<IEmployeePut>(
   props.data
     ? { ...props.data }
     : {
-        id: 0,
+        id: undefined,
         firstname: '',
         lastname: '',
         age: 0,
-        occupation: Occupations.developer,
+        occupation: Occupations.developer.toLowerCase(),
         salary: 0,
         employed: new Date(Date.now()),
       },
 );
+
+const dateNumRef = ref<number | null>(Number(modelRef.value.employed));
+
+watch(dateNumRef, (newVal) => {
+  if (newVal) {
+    modelRef.value.employed = new Date(newVal);
+  }
+});
 
 watch(
   () => props.data,
@@ -46,27 +56,38 @@ watch(
 
 const occupationOptions = Object.entries(Occupations).map(([key, label]) => ({
   label,
-  value: key,
+  value: key.toLowerCase(),
 }));
 
 const formRef = ref<FormInst | null>(null);
 const message = useMessage();
 
-const employeeFormValidation = (e: MouseEvent) => {
-  e.preventDefault();
+const employeeFormValidation = () => {
   formRef.value?.validate((errors) => {
     if (!errors) {
-      message.success(
-        props.data
-          ? `Successfully updated Employee: ${modelRef.value.firstname}`
-          : `Successfully added Employee: ${modelRef.value.firstname}`,
-      );
-      emit('close');
+      handleFormSubmit();
     } else {
       console.log(errors);
       message.error(`Failed to submit employee data`);
     }
   });
+};
+const handleFormSubmit = async () => {
+  const action = props.data ? 'updated' : 'added';
+
+  message.success(`Successfully ${action} Employee: ${modelRef.value.firstname}`);
+  try {
+    if (props.data) {
+      await putEmployeeService(modelRef.value);
+    } else {
+      await postEmployeeService(modelRef.value);
+    }
+    emit('updated');
+    emit('close');
+  } catch (e) {
+    message.error(`Failed to ${action} employee`);
+    console.error(e);
+  }
 };
 </script>
 
@@ -82,6 +103,7 @@ const employeeFormValidation = (e: MouseEvent) => {
       :rules="employeeFormRules"
       ref="formRef"
       :model="modelRef"
+      @submit.prevent="handleFormSubmit"
     >
       <n-form-item label="Firstname" path="firstname">
         <n-input round v-model:value="modelRef.firstname" />
@@ -103,14 +125,14 @@ const employeeFormValidation = (e: MouseEvent) => {
         <n-input-number step="100" round v-model:value="modelRef.salary" />
       </n-form-item>
       <n-form-item label="Employed" path="employed">
-        <n-date-picker type="datetime" round v-model:value="modelRef.employed" />
+        <n-date-picker type="datetime" round v-model:value="dateNumRef" />
       </n-form-item>
       <n-button
         type="primary"
         style="margin-top: 2rem"
         strong
         block
-        @click="employeeFormValidation"
+        @click.prevent="employeeFormValidation"
       >
         {{ props.data ? 'Update' : 'Create' }}
       </n-button>

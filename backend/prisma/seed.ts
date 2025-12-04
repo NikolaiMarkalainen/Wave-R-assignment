@@ -1,4 +1,4 @@
-import { PrismaClient } from '../generated/prisma/client.js';
+import { Employee, PrismaClient } from '../generated/prisma/client.js';
 import { PrismaPg } from '@prisma/adapter-pg';
 import 'dotenv/config';
 import fs from 'fs';
@@ -26,13 +26,19 @@ async function main() {
   }));
 
   await prisma.employee.deleteMany({});
+  await prisma.employee.deleteMany();
+  await prisma.$executeRaw`ALTER SEQUENCE "Employee_id_seq" RESTART WITH 1`;
 
-  const result = await prisma.employee.createMany({
-    data: employees,
-    skipDuplicates: true,
+  await prisma.employee.createMany({
+    data: employees.map((emp: Omit<Employee, 'id'>) => ({
+      firstname: emp.firstname,
+      lastname: emp.lastname,
+      age: emp.age,
+      occupation: emp.occupation,
+      salary: emp.salary,
+      employed: new Date(emp.employed),
+    })),
   });
-
-  console.log('Seeded employees:', result);
 }
 
 main()

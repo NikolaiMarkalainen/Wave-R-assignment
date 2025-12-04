@@ -38,6 +38,10 @@ export interface ILoginPayload {
 
 export type IEmployeePayload = Omit<IEmployee, 'id'>;
 
+export interface IEmployeePut extends Omit<IEmployee, 'id'> {
+  id?: number;
+}
+
 export interface IEmployeePaginationResponse {
   page: number;
   limit: number;

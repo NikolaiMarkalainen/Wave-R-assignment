@@ -36,8 +36,11 @@ export const employeeFormRules: FormRules = {
     required: true,
     message: 'Please enter employee Date of employment',
     trigger: 'blur',
-    validator(rule: FormItemRule, value: number) {
-      return value > 0;
+    validator(rule: FormItemRule, value: Date) {
+      if (!(value instanceof Date) || isNaN(value.getTime())) {
+        return new Error('Please enter a valid date');
+      }
+      return true;
     },
   },
 };

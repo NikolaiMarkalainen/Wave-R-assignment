@@ -159,6 +159,8 @@ const handleCheck = (rowKeys: DataTableRowKey[]) => {
 const handleRowClick = (row: IEmployee) => {
   showDetails.value = true;
   selectedRow.value = row;
+  selectedRow.value.employed = new Date(selectedRow.value.employed);
+  selectedRow.value.occupation = selectedRow.value.occupation.toLowerCase();
 };
 
 const handleDelete = () => {
@@ -251,10 +253,15 @@ const handleSortChange = (sorter: {
       @update:sorter="handleSortChange"
     />
     <n-modal v-model:show="showDetails">
-      <UserView v-if="selectedRow" :data="selectedRow" @close="showDetails = false" />
+      <UserView
+        v-if="selectedRow"
+        :data="selectedRow"
+        @close="showDetails = false"
+        @updated="fetchEmployees"
+      />
     </n-modal>
     <n-modal v-model:show="showAddModal">
-      <UserView @close="showAddModal = false" />
+      <UserView @close="showAddModal = false" @updated="fetchEmployees" />
     </n-modal>
   </n-flex>
 </template>
