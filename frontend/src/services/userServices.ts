@@ -13,8 +13,15 @@ export const postEmployeeService = async (payload: IEmployeePut) => {
   console.log(response);
 };
 
-export const deleteEmployeeService = (payload: number[]) => {
-  console.log('DELETE: deleteemployeeService ', payload);
+export const deleteEmployeeService = async (payload: { ids: number[] }) => {
+  const url = `${API_URL}/employee`;
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+  console.log(response);
 };
 
 export const putEmployeeService = async (payload: IEmployeePut) => {
@@ -42,7 +49,6 @@ export const getEmployeeService = async (params: queryParams) => {
   if (params.pageSize) query.append('pageSize', params.pageSize.toString());
   if (params.occupation) {
     if (Array.isArray(params.occupation)) {
-      // append each occupation separately
       params.occupation.forEach((occ) => query.append('occupation', occ));
     } else {
       query.append('occupation', params.occupation);

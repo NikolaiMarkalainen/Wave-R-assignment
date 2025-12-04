@@ -6,7 +6,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { Occupations } from '@/types/types';
 import type { IEmployee, IEmployeePayload, IOccupations, queryParams } from '@/types/types';
 import UserView from '@/components/UserView.vue';
-import { getEmployeeService } from '@/services/userServices';
+import { deleteEmployeeService, getEmployeeService } from '@/services/userServices';
 import { useRoute, useRouter } from 'vue-router';
 import type { FilterState } from 'naive-ui/es/data-table/src/interface';
 
@@ -163,9 +163,13 @@ const handleRowClick = (row: IEmployee) => {
   selectedRow.value.occupation = selectedRow.value.occupation.toLowerCase();
 };
 
-const handleDelete = () => {
-  //send request to delete by id
-  console.log(checkedRows.value);
+const handleDelete = async () => {
+  const deleteRows: { ids: number[] } = {
+    ids: checkedRows.value.map((row) => row.id),
+  };
+
+  await deleteEmployeeService(deleteRows);
+  fetchEmployees();
 };
 
 const fetchEmployees = async () => {
