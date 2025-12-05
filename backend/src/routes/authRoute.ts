@@ -15,7 +15,7 @@ router.post(
       httpOnly: true,
       secure: false,
       maxAge: 7257600000,
-      sameSite: 'lax',
+      sameSite: 'none',
     });
     response.status(200).json({ success: true, message: 'Login successful' });
   })
@@ -51,7 +51,7 @@ router.post(
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 0,
-      sameSite: 'lax',
+      sameSite: 'none',
     });
     return response.status(200).json({ message: 'Logged out successfully' });
   })
