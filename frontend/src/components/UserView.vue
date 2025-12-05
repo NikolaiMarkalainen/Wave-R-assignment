@@ -23,7 +23,6 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits(['close', 'updated']);
 
-console.log(props);
 const modelRef = ref<IEmployeePut>(
   props.data
     ? { ...props.data }
