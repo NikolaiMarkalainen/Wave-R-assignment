@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: [process.env.FRONT, 'http:localhost:5000', process.env.SELF].filter(
+    origin: [process.env.FRONT, 'http:localhost:5000', process.env.SELF, process.env.REMOTE].filter(
       Boolean
     ) as string[],
     credentials: true,
