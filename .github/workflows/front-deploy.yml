@@ -3,6 +3,8 @@ description: Deploy frontend to S3 bucket
 permissions:
   id-token: write
   contents: read
+env:
+  VITE_API_URL: ${{ secrets.EC2_URL }}
 on:
   push:
     branches:
