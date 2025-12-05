@@ -5,7 +5,7 @@ import { protectedRoute } from '../middleware/auth.js';
 import { TokenError } from '../utils/errors.js';
 import type { AuthRequest } from '../types/types.js';
 const router = express.Router();
-
+const isProduction = process.env.NODE_ENV === 'production';
 router.post(
   '/login',
   asyncHandler(async (request, response) => {
@@ -13,9 +13,9 @@ router.post(
 
     response.cookie('access_token', token, {
       httpOnly: true,
-      secure: false,
+      secure: isProduction,
       maxAge: 7257600000,
-      sameSite: 'none',
+      sameSite: isProduction ? 'none' : 'lax',
     });
     response.status(200).json({ success: true, message: 'Login successful' });
   })
@@ -49,9 +49,9 @@ router.post(
     }
     response.cookie('access_token', '', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProduction,
       maxAge: 0,
-      sameSite: 'none',
+      sameSite: isProduction ? 'none' : 'lax',
     });
     return response.status(200).json({ message: 'Logged out successfully' });
   })
