@@ -40,4 +40,4 @@ jobs:
         run: aws s3 sync ./frontend/dist ${{secrets.S3_DIR}} --delete
 
       - name: Invalidate CloudFront cache
-        run: aws cloudfront create-invalidation --distribution-id E1ZGIOFE144JA9 --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id ${{secrets.S3_CF_ID}} --paths "/*"
