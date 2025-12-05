@@ -1,5 +1,5 @@
 name: front-deploy
-description: Deploy frontend to S3 bucket
+description: Deploy Frontend to S3 bucket
 permissions:
   id-token: write
   contents: read
