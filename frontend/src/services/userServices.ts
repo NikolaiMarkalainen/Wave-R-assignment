@@ -4,24 +4,22 @@ const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 export const postEmployeeService = async (payload: IEmployeePut) => {
   const url = `${API_URL}/employee`;
-  const response = await fetch(url, {
+  await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
     credentials: 'include',
   });
-  console.log(response);
 };
 
 export const deleteEmployeeService = async (payload: { ids: number[] }) => {
   const url = `${API_URL}/employee`;
-  const response = await fetch(url, {
+  await fetch(url, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
     credentials: 'include',
   });
-  console.log(response);
 };
 
 export const putEmployeeService = async (payload: IEmployeePut) => {

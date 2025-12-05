@@ -21,6 +21,4 @@ const PORT = process.env.PORT || 5000;
 
 registerRoutes(app);
 app.use(errorMiddleWare);
-app.listen(Number(PORT), '0.0.0.0', () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-);
+app.listen(Number(PORT), '0.0.0.0', () => console.log(`Server running on PORT: ${PORT}`));

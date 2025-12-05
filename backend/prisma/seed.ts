@@ -9,8 +9,6 @@ const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log('Current directory:', process.cwd());
-
   const filePath = path.join(process.cwd(), 'prisma', 'seed.json');
 
   if (!fs.existsSync(filePath)) {

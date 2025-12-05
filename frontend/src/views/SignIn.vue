@@ -46,7 +46,6 @@ const handleRegister = async () => {
 };
 
 const writeMessage = (result: MessageResult) => {
-  console.log(result);
   if (result.success) {
     message.success(result.message);
     return;

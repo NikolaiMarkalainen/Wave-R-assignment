@@ -180,11 +180,9 @@ const fetchEmployees = async () => {
   pagination.itemCount = Number(result.total);
   pagination.page = Number(apiParams.page);
   pagination.pageSize = Number(apiParams.pageSize);
-  console.log(pagination.page * pagination.pageSize < pagination.itemCount);
 };
 const handleAdd = () => {
   showAddModal.value = true;
-  console.log('Add');
 };
 const handleTableChange = (filters: FilterState) => {
   const occupationFilter = filters.occupation
@@ -198,7 +196,6 @@ const handleTableChange = (filters: FilterState) => {
       .map((val) => Object.entries(Occupations).find(([display]) => display === val)?.[0])
       .filter(Boolean) as IOccupations[];
   } else {
-    console.log('?');
     apiParams.occupation = undefined;
   }
 
