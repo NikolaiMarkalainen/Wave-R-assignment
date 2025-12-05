@@ -1,7 +1,5 @@
 import type { ApiResult, ICreateUserPayload, ILoginPayload } from '@/types/types';
 
-// Use import.meta.env to access environment variables exposed by Vite.
-// We default to the /api proxy path configured in vite.config.js.
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 export const createUserService = async (payload: ICreateUserPayload): Promise<ApiResult> => {
@@ -60,6 +58,7 @@ export const verifyToken = async () => {
 
 export const logoutUser = async () => {
   const url = `${API_URL}/auth/logout`;
+  console.log(url);
 
   const response = await fetch(url, {
     method: 'POST',

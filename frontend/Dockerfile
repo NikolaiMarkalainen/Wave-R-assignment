@@ -1,4 +1,3 @@
-# Stage 1: Builder for dependencies
 FROM node:24-alpine AS deps
 
 WORKDIR /usr/src/app

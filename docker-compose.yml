@@ -62,6 +62,18 @@ services:
         condition: service_healthy
       frontend:
         condition: service_healthy
-
+  init-backend:
+    image: node:24-alpine
+    working_dir: /usr/src/app
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - backend
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    command: >
+      sh -c "npm install && npm run db-setup"
 volumes:
   postgres_data:
