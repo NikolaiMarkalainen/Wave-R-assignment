@@ -23,7 +23,7 @@ jobs:
         run: npm cache clean --force
 
       - name: Installing dependencies
-        run: npm install
+        run: npm ci
         working-directory: ./frontend
 
       - name: Deployment build
